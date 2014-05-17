@@ -1,0 +1,19 @@
+{
+	"name": "tippingcanoe/pushwoosh",
+	"description": "Improved Pushwoosh library for PHP.",
+	"authors": [
+		{
+			"name": "Alexander Trauzzi",
+			"email": "a.trauzzi@tippingcanoe.com"
+		}
+	],
+	"require": {
+        "ext-curl": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"TippingCanoe\\PushWoosh": "src/"
+		}
+	},
+	"minimum-stability": "dev"
+}
