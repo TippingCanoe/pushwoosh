@@ -28,7 +28,8 @@
 		// ToDo: Register/unregister a device
 		// ToDo: Add/remove a tag
 
-		public function pushToTags(Message $message, array $tags) {
+
+		public function push(Message $message) {
 
 			$data = [
 				'notifications' => [
