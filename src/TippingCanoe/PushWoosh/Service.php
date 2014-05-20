@@ -12,6 +12,13 @@
 		/** @var string */
 		protected $accessToken;
 
+		public function setApplicationCode($applicationCode) {
+			$this->applicationCode = $applicationCode;
+		}
+
+		public function setAccessToken($accessToken) {
+			$this->accessToken = $accessToken;
+		}
 
 		// Sending to a device should be in Laravel Mobile Devices?
 		// ToDo: Create a push driver system in LMD and then create & register a driver.
@@ -21,15 +28,17 @@
 		// ToDo: Register/unregister a device
 		// ToDo: Add/remove a tag
 
-		/*
-		"application":"APPLICATION_CODE",
-		"applications_group":"GROUP_CODE",       // Optional. Can be used instead of "application"
-		"auth":"api_access_token",
-		*/
-
 		public function pushToTags(Message $message, array $tags) {
 
-			$this->callApi();
+			$data = [
+				'notifications' => [
+					$message->toArray()
+				]
+			];
+			$this->addApplicationCode($data);
+			$this->addAccessToken($data);
+
+			return $this->callApi('createMessage', $data);
 
 		}
 

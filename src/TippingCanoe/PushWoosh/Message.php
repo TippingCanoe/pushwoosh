@@ -1,5 +1,7 @@
 <?php namespace TippingCanoe\Pushwoosh {
 
+	use Carbon\Carbon;
+
 
 	class Message {
 
@@ -77,8 +79,7 @@
 		/** @var int */
 		public $androidGcmTtl;
 
-
-		public function toJson() {
+		public function toArray() {
 
 			$data = [];
 
@@ -87,10 +88,15 @@
 				switch($attribute) {
 
 					case 'sendDate':
-						$value = $value->
+						if($value instanceof Carbon)
+							$value = $value->format('Y-m-d G:i');
 					break;
 
 					default:
+						// By default, do not serialize null values.
+						if(is_null($value)) {
+							continue(2);
+						}
 					break;
 
 				}
@@ -99,17 +105,18 @@
 
 			}
 
+			return $data;
+
 		}
 
 		//
 		//
 		//
 
-		public static function snake($value, $delimiter = '_') {
+		protected function snake($value, $delimiter = '_') {
 			$replace = '$1'.$delimiter.'$2';
 			return ctype_lower($value) ? $value : strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
 		}
-
 
 /*
 
