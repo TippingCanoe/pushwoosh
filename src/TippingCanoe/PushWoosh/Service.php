@@ -40,14 +40,8 @@
 		 * @return mixed
 		 */
 		public function pushToDevices(Message $message, array $devices) {
-
 			$message->addDevices($devices);
-			$data = $this->prepareMessage($message);
-
-			$this->addApplicationCode($data);
-			$this->addAccessToken($data);
-			return $this->callApi('createMessage', $data);
-
+			return $this->push($message);
 		}
 
 		//
