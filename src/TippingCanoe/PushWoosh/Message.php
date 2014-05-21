@@ -84,14 +84,18 @@
 		//
 
 		/**
-		 * @param \TippingCanoe\PushWoosh\Device $device
+		 * Adds a single device to receive the push.
+		 *
+		 * @param \TippingCanoe\Pushwoosh\Device $device
 		 */
 		public function addDevice(Device $device) {
 			$this->devices[] = $device->id;
 		}
 
 		/**
-		 * @param \TippingCanoe\PushWoosh\Device[] $devices
+		 * Adds an array of devices to receive the push.
+		 *
+		 * @param \TippingCanoe\Pushwoosh\Device[] $devices
 		 */
 		public function addDevices(array $devices) {
 			array_merge(

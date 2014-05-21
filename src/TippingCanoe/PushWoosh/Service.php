@@ -12,22 +12,35 @@
 		/** @var string */
 		protected $accessToken;
 
+		/**
+		 * Configures the library with an application code from Pushwoosh
+		 *
+		 * @param $applicationCode
+		 */
 		public function setApplicationCode($applicationCode) {
 			$this->applicationCode = $applicationCode;
 		}
 
+		/**
+		 * Configures the library with an application code from Pushwoosh
+		 *
+		 * @param $accessToken
+		 */
 		public function setAccessToken($accessToken) {
 			$this->accessToken = $accessToken;
 		}
 
 		/**
-		 * @param \TippingCanoe\PushWoosh\Message $message
+		 * Sends a message.
+		 *
+		 * @param \TippingCanoe\Pushwoosh\Message $message
 		 * @return mixed
 		 */
 		public function push(Message $message) {
 
-			$data = $this->prepareMessage($message);
+			$data = [];
 
+			$this->addMessage($message, $data);
 			$this->addApplicationCode($data);
 			$this->addAccessToken($data);
 			return $this->callApi('createMessage', $data);
@@ -35,8 +48,10 @@
 		}
 
 		/**
-		 * @param \TippingCanoe\PushWoosh\Message $message
-		 * @param \TippingCanoe\PushWoosh\Device[] $devices
+		 * Adds devices to a message and sends them, mostly a convenience method.
+		 *
+		 * @param \TippingCanoe\Pushwoosh\Message $message
+		 * @param \TippingCanoe\Pushwoosh\Device[] $devices
 		 * @return mixed
 		 */
 		public function pushToDevices(Message $message, array $devices) {
@@ -45,9 +60,15 @@
 		}
 
 		//
-		//
+		// Low level
 		//
 
+		/**
+		 * Adds a message to be sent.
+		 *
+		 * @param Message $message
+		 * @param array $data
+		 */
 		protected function addMessage(Message $message, array &$data) {
 			if(!array_key_exists('notifications', $data))
 				$data['notifications'] = [];
@@ -73,7 +94,7 @@
 		}
 
 		/**
-		 * Handles the low level calls to the PushWoosh API
+		 * Handles the low level calls to the Pushwoosh API
 		 * @param $method
 		 * @param $data
 		 * @return mixed
