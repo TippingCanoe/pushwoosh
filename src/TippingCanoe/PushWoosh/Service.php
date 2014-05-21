@@ -20,25 +20,35 @@
 			$this->accessToken = $accessToken;
 		}
 
-		// Sending to a device should be in Laravel Mobile Devices?
-		// ToDo: Create a push driver system in LMD and then create & register a driver.
-		//public function sendToDevice() {
-		//
-		//}
-		// ToDo: Register/unregister a device
-		// ToDo: Add/remove a tag
-
-
+		/**
+		 * @param \TippingCanoe\PushWoosh\Message $message
+		 * @return mixed
+		 */
 		public function push(Message $message) {
 
-			$data = [
-				'notifications' => [
-					$message->toArray()
-				]
-			];
+			$data = $this->prepareMessage($message);
+
 			$this->addApplicationCode($data);
 			$this->addAccessToken($data);
+			return $this->callApi('createMessage', $data);
 
+		}
+
+		/**
+		 * @param \TippingCanoe\PushWoosh\Message $message
+		 * @param \TippingCanoe\PushWoosh\Device[] $devices
+		 * @return mixed
+		 */
+		public function pushToDevices(Message $message, array $devices) {
+
+			$data = $this->prepareMessage($message);
+
+			$data['notifications']['devices'] = array_map(function (Device $device) {
+				return $device->id;
+			}, $devices);
+
+			$this->addApplicationCode($data);
+			$this->addAccessToken($data);
 			return $this->callApi('createMessage', $data);
 
 		}
@@ -46,6 +56,14 @@
 		//
 		//
 		//
+
+		protected function prepareMessage(Message $message) {
+			return [
+				'notifications' => [
+					$message->toArray()
+				]
+			];
+		}
 
 		protected function addAccessToken(array &$data) {
 			$data['auth'] = $this->accessToken;
@@ -71,7 +89,6 @@
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 
 			$response = curl_exec($ch);
-			//$info = curl_getinfo($ch);
 			curl_close($ch);
 
 			return json_decode($response);
