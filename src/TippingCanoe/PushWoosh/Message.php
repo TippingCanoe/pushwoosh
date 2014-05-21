@@ -5,11 +5,11 @@
 
 	class Message {
 
-		/** @var string|string[] */
-		public $content;
-
 		/** @var string|array|object */
 		public $data;
+
+		/** @var string|string[] */
+		public $content;
 
 		/** @var \Carbon\Carbon|string */
 		public $sendDate = 'now';
@@ -26,17 +26,21 @@
 		/** @var int */
 		public $minimizeLink;
 
-		/** @var int[] */
-		public $platforms;
-
-		/** @var string[] */
-		protected $devices = [];
-
 		/** @var string */
 		public $filter;
 
 		/** @var array */
 		public $conditions;
+
+		//
+		//
+		//
+
+		/** @var string[] */
+		protected $devices = [];
+
+		/** @var int[] */
+		protected $platforms;
 
 		//
 		// iOS Attributes
@@ -108,6 +112,11 @@
 		//
 		//
 
+		/**
+		 * Correctly serializes all attributes.
+		 *
+		 * @return array
+		 */
 		public function toArray() {
 
 			$data = [];
@@ -147,6 +156,13 @@
 		//
 		//
 
+		/**
+		 * Utility method to perform snake_casing of attributes.
+		 *
+		 * @param $value
+		 * @param string $delimiter
+		 * @return string
+		 */
 		protected function snake($value, $delimiter = '_') {
 			$replace = '$1'.$delimiter.'$2';
 			return ctype_lower($value) ? $value : strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
