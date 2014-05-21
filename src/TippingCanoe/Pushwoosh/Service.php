@@ -12,6 +12,9 @@
 		/** @var string */
 		protected $accessToken;
 
+		/** @var array */
+		protected $lastLog;
+
 		/**
 		 * Configures the library with an application code from Pushwoosh
 		 *
@@ -72,7 +75,7 @@
 		protected function addMessage(Message $message, array &$data) {
 			if(!array_key_exists('notifications', $data))
 				$data['notifications'] = [];
-			$data['notificaions'][] = $message->toArray();
+			$data['notifications'][] = $message->toArray();
 		}
 
 		/**
@@ -115,6 +118,13 @@
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 
 			$response = curl_exec($ch);
+
+			// Store some logging information that can be picked up by anything interested.
+			$this->lastLog = [
+				'data' => $data,
+				'info' => curl_getinfo($ch)
+			];
+
 			curl_close($ch);
 
 			return json_decode($response);
