@@ -26,18 +26,15 @@
 		/** @var int */
 		public $minimizeLink;
 
-		/** @var string */
-		public $filter;
+		//
+		//
+		//
+
+		/** @var \TippingCanoe\Pushwoosh\Device[] */
+		protected $devices = [];
 
 		/** @var array */
-		public $conditions;
-
-		//
-		//
-		//
-
-		/** @var string[] */
-		protected $devices = [];
+		protected $conditions = [];
 
 		/** @var int[] */
 		protected $platforms;
@@ -88,12 +85,30 @@
 		//
 
 		/**
+		 * Adds a condition to the push message as per Pushwoosh
+		 *
+		 * @param string $name
+		 * @param string $operator
+		 * @param string|array $operand
+		 */
+		public function addCondition($name, $operator, $operand) {
+
+			$condition = new Condition();
+			$condition->name = $name;
+			$condition->operator = $operator;
+			$condition->operand = $operand;
+
+			$this->conditions[] = $condition;
+
+		}
+
+		/**
 		 * Adds a single device to receive the push.
 		 *
 		 * @param \TippingCanoe\Pushwoosh\Device $device
 		 */
 		public function addDevice(Device $device) {
-			$this->devices[] = $device->id;
+			$this->devices[] = $device;
 		}
 
 		/**
@@ -103,7 +118,7 @@
 		 */
 		public function addDevices(array $devices) {
 			array_merge(
-				array_map([$this, 'addDevice'], $devices),
+				$devices,
 				$this->devices
 			);
 		}
@@ -128,6 +143,32 @@
 					case 'sendDate':
 						if($value instanceof Carbon)
 							$value = $value->format('Y-m-d G:i');
+					break;
+
+					case 'devices':
+
+						if(empty($value))
+							continue(2);
+
+						$value = array_map(function (Device $device) {
+							return $device->id;
+						}, $value);
+
+					break;
+
+					case 'conditions':
+
+						if(empty($value))
+							continue(2);
+
+						$value = array_map(function (Condition $condition) {
+
+							if(is_array($condition->operand))
+								return $condition->operand;
+
+							return sprintf('%s %s %s', $condition->name, $condition->operator, $condition->operand);
+
+						}, $value);
 					break;
 
 					default:
@@ -168,7 +209,16 @@
 			return ctype_lower($value) ? $value : strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
 		}
 
-/*
+	/*
+	//
+	// Unimplemented
+	//
+
+	public $filter;
+
+	//
+	//
+	//
 
 	// Amazon related
 	"adm_root_params": {"key": "value"}, // custom key-value object
@@ -205,8 +255,7 @@
 	"safari_action": "Click here", // Optional
 	"safari_url_args": ["firstArgument", "secondArgument"], // Optional if your application url template has no placeholders
 	"safari_ttl": 3600, // Optional. Time to live parameter - the maximum lifespan of a message in seconds
-
-*/
+	*/
 
 	}
 

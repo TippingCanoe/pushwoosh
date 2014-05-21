@@ -13,7 +13,7 @@
 		protected $accessToken;
 
 		/** @var array */
-		protected $lastLog;
+		public $lastLog;
 
 		/**
 		 * Configures the library with an application code from Pushwoosh
