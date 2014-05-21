@@ -30,7 +30,7 @@
 		public $platforms;
 
 		/** @var string[] */
-		public $devices;
+		protected $devices = [];
 
 		/** @var string */
 		public $filter;
@@ -79,6 +79,31 @@
 		/** @var int */
 		public $androidGcmTtl;
 
+		//
+		//
+		//
+
+		/**
+		 * @param \TippingCanoe\PushWoosh\Device $device
+		 */
+		public function addDevice(Device $device) {
+			$this->devices[] = $device->id;
+		}
+
+		/**
+		 * @param \TippingCanoe\PushWoosh\Device[] $devices
+		 */
+		public function addDevices(array $devices) {
+			array_merge(
+				array_map([$this, 'addDevice'], $devices),
+				$this->devices
+			);
+		}
+
+		//
+		//
+		//
+
 		public function toArray() {
 
 			$data = [];
@@ -93,8 +118,13 @@
 					break;
 
 					default:
-						// By default, do not serialize null values.
-						if(is_null($value)) {
+						// By default, do not serialize...
+						if(
+							// null
+							is_null($value)
+							// Empty arrays
+							|| (is_array($value) && empty($value))
+						) {
 							continue(2);
 						}
 					break;

@@ -41,11 +41,8 @@
 		 */
 		public function pushToDevices(Message $message, array $devices) {
 
+			$message->addDevices($devices);
 			$data = $this->prepareMessage($message);
-
-			$data['notifications']['devices'] = array_map(function (Device $device) {
-				return $device->id;
-			}, $devices);
 
 			$this->addApplicationCode($data);
 			$this->addAccessToken($data);
@@ -57,22 +54,36 @@
 		//
 		//
 
-		protected function prepareMessage(Message $message) {
-			return [
-				'notifications' => [
-					$message->toArray()
-				]
-			];
+		protected function addMessage(Message $message, array &$data) {
+			if(!array_key_exists('notifications', $data))
+				$data['notifications'] = [];
+			$data['notificaions'][] = $message->toArray();
 		}
 
+		/**
+		 * Inserts the access token to an array.
+		 *
+		 * @param array $data
+		 */
 		protected function addAccessToken(array &$data) {
 			$data['auth'] = $this->accessToken;
 		}
 
+		/**
+		 * Inserts the application code to an array.
+		 *
+		 * @param array $data
+		 */
 		protected function addApplicationCode(array &$data) {
 			$data['application'] = $this->applicationCode;
 		}
 
+		/**
+		 * Handles the low level calls to the PushWoosh API
+		 * @param $method
+		 * @param $data
+		 * @return mixed
+		 */
 		protected function callApi($method, $data) {
 
 			$url = 'https://cp.pushwoosh.com/json/1.3/' . $method;
