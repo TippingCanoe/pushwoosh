@@ -138,6 +138,10 @@
 
 			foreach($this as $attribute => $value) {
 
+				// Never send empty arrays.
+				if(is_array($value) && empty($value))
+					continue;
+
 				switch($attribute) {
 
 					case 'sendDate':
@@ -147,9 +151,6 @@
 
 					case 'devices':
 
-						if(empty($value))
-							continue(2);
-
 						$value = array_map(function (Device $device) {
 							return $device->id;
 						}, $value);
@@ -157,9 +158,6 @@
 					break;
 
 					case 'conditions':
-
-						if(empty($value))
-							continue(2);
 
 						$value = array_map(function (Condition $condition) {
 
@@ -169,18 +167,14 @@
 							return sprintf('%s %s %s', $condition->name, $condition->operator, $condition->operand);
 
 						}, $value);
+
 					break;
 
 					default:
-						// By default, do not serialize...
-						if(
-							// null
-							is_null($value)
-							// Empty arrays
-							|| (is_array($value) && empty($value))
-						) {
+						// By default, do not serialize nulls.
+						if(is_null($value))
 							continue(2);
-						}
+
 					break;
 
 				}
