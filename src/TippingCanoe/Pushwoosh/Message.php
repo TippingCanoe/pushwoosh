@@ -117,7 +117,7 @@
 		 * @param \TippingCanoe\Pushwoosh\Device[] $devices
 		 */
 		public function addDevices(array $devices) {
-			array_merge(
+			$this->devices = array_merge(
 				$devices,
 				$this->devices
 			);
@@ -151,7 +151,7 @@
 
 					case 'devices':
 
-						$value = array_map(function (Device $device) {
+						$value = array_map(function ($device) {
 							return $device->id;
 						}, $value);
 
