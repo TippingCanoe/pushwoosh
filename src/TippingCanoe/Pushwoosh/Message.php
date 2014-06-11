@@ -151,7 +151,7 @@
 
 					case 'devices':
 
-						$value = array_map(function (Device $device) {
+						$value = array_map(function ($device) {
 							return $device->id;
 						}, $value);
 
