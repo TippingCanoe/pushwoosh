@@ -58,7 +58,6 @@
 		 * @return mixed
 		 */
 		public function pushToDevices(Message $message, $devices) {
-			$devices = (array)$devices;
 			$message->addDevices($devices);
 			return $this->push($message);
 		}

@@ -116,11 +116,16 @@
 		 *
 		 * @param \TippingCanoe\Pushwoosh\Device[] $devices
 		 */
-		public function addDevices(array $devices) {
+		public function addDevices($devices) {
+
+			if(!is_array($devices))
+				$devices = func_get_args();
+
 			$this->devices = array_merge(
 				$devices,
 				$this->devices
 			);
+
 		}
 
 		//
