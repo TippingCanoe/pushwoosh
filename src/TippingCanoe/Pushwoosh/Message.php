@@ -94,7 +94,7 @@
 		const WNS_RAW = 4;
 
 		/** @var int */
-		public $wnsType;
+		public $wnsType = self::WNS_TOAST;
 
 		/** @var string */
 		public $wnsContent;
@@ -199,34 +199,39 @@
 						// Generate WNS notification data if none has been assigned.
 						if(!$value) {
 
-							// Toast Schema
-							// http://msdn.microsoft.com/en-us/library/windows/apps/br230849.aspx
-							// http://msdn.microsoft.com/en-us/library/windows/apps/br230846.aspx
-							$toast = new SimpleXMLElement('<?xml version="1.0" ?><toast></toast>');
+							// ToDo: Break this out into more types later.
+							if($this->wnsType == self::WNS_TOAST) {
 
-							// Toast Element
-							if($this->data)
-								$toast->addAttribute('launch', json_encode($this->data));
+								// Toast Schema
+								// http://msdn.microsoft.com/en-us/library/windows/apps/br230849.aspx
+								// http://msdn.microsoft.com/en-us/library/windows/apps/br230846.aspx
+								$toast = new SimpleXMLElement('<?xml version="1.0" ?><toast></toast>');
 
-							$visual = $toast->addChild('visual');
+								// Toast Element
+								if($this->data)
+									$toast->addAttribute('launch', json_encode($this->data));
 
-							$binding = $visual->addChild('binding');
+								$visual = $toast->addChild('visual');
 
-							if($this->imageUri) {
-								$binding->addAttribute('template', 'ToastImageAndText02');
-								$image = $binding->addChild('image');
-								$image->addAttribute('id', '1');
-								$image->addAttribute('src', $this->imageUri);
-								$image->addAttribute('alt', '');
+								$binding = $visual->addChild('binding');
+
+								if($this->imageUri) {
+									$binding->addAttribute('template', 'ToastImageAndText02');
+									$image = $binding->addChild('image');
+									$image->addAttribute('id', '1');
+									$image->addAttribute('src', $this->imageUri);
+									$image->addAttribute('alt', '');
+								}
+								else {
+									$binding->addAttribute('template', 'ToastText02');
+								}
+
+								$text = $binding->addChild('text', $this->content);
+								$text->addAttribute('id', '1');
+
+								$value = $toast->asXML();
+
 							}
-							else {
-								$binding->addAttribute('template', 'ToastText02');
-							}
-
-							$text = $binding->addChild('text', $this->content);
-							$text->addAttribute('id', '1');
-
-							$value = $toast->asXML();
 
 						}
 
