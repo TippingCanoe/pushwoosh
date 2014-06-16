@@ -9,6 +9,9 @@
 		/** @var string|array|object */
 		public $data;
 
+		/** @var string */
+		public $title;
+
 		/** @var string|string[] */
 		public $content;
 
@@ -166,7 +169,14 @@
 			foreach($this as $attribute => $value) {
 
 				// Never send empty arrays.
-				if(is_array($value) && empty($value))
+				if(
+					(is_array($value) && empty($value))
+					// Some fields are meta fields offered as a convenience when targeting multiple platforms.
+					|| in_array($attribute, [
+						'wnsType',
+						'imageUri'
+					])
+				)
 					continue;
 
 				switch($attribute) {
@@ -231,10 +241,17 @@
 									$binding->addAttribute('template', 'ToastText02');
 								}
 
-								$text = $binding->addChild('text', $this->content);
-								$text->addAttribute('id', '1');
+								$textId = 1;
+								if($this->title) {
+									$title = $binding->addChild('text', $this->title);
+									$title->addAttribute('id', $textId);
+									++$textId;
+								}
 
-								$value = $toast->asXML();
+								$text = $binding->addChild('text', $this->content);
+								$text->addAttribute('id', $textId);
+
+								$value = base64_encode($toast->asXML());
 
 							}
 
