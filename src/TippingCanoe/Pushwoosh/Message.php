@@ -1,6 +1,7 @@
 <?php namespace TippingCanoe\Pushwoosh {
 
 	use Carbon\Carbon;
+	use SimpleXMLElement;
 
 
 	class Message {
@@ -10,6 +11,9 @@
 
 		/** @var string|string[] */
 		public $content;
+
+		/** @var string */
+		public $imageUri;
 
 		/** @var \Carbon\Carbon|string */
 		public $sendDate = 'now';
@@ -79,6 +83,24 @@
 
 		/** @var int */
 		public $androidGcmTtl;
+
+		//
+		// Windows Notification Services Attributes
+		//
+
+		const WNS_TILE = 1;
+		const WNS_TOAST = 2;
+		const WNS_BADGE = 3;
+		const WNS_RAW = 4;
+
+		/** @var int */
+		public $wnsType;
+
+		/** @var string */
+		public $wnsContent;
+
+		/** @var string */
+		// public $wnsTag;
 
 		//
 		//
@@ -170,6 +192,46 @@
 
 					break;
 
+					// WNS Schema
+					// http://msdn.microsoft.com/en-us/library/windows/apps/br212853.aspx
+					case 'wnsContent':
+
+						// Generate WNS notification data if none has been assigned.
+						if(!$value) {
+
+							// Toast Schema
+							// http://msdn.microsoft.com/en-us/library/windows/apps/br230849.aspx
+							// http://msdn.microsoft.com/en-us/library/windows/apps/br230846.aspx
+							$toast = new SimpleXMLElement('<?xml version="1.0" ?><toast></toast>');
+
+							// Toast Element
+							if($this->data)
+								$toast->addAttribute('launch', json_encode($this->data));
+
+							$visual = $toast->addChild('visual');
+
+							$binding = $visual->addChild('binding');
+
+							if($this->imageUri) {
+								$binding->addAttribute('template', 'ToastImageAndText02');
+								$image = $binding->addChild('image');
+								$image->addAttribute('id', '1');
+								$image->addAttribute('src', $this->imageUri);
+								$image->addAttribute('alt', '');
+							}
+							else {
+								$binding->addAttribute('template', 'ToastText02');
+							}
+
+							$text = $binding->addChild('text', $this->content);
+							$text->addAttribute('id', '1');
+
+							$value = $toast->asXML();
+
+						}
+
+					break;
+
 					default:
 						// By default, do not serialize nulls.
 						if(is_null($value))
@@ -235,14 +297,6 @@
 	"mac_sound": "sound.caf",
 	"mac_root_params": {"content-available":1},
 	"mac_ttl": 3600, // Optional. Time to live parameter - the maximum lifespan of a message in seconds
-
-	// WNS related
-	"wns_content": { // Content (XML or raw) of notification encoded in MIME's base64 in form of Object( language1: 'content1', language2: 'content2' ) OR String
-	   "en": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YmFkZ2UgdmFsdWU9ImF2YWlsYWJsZSIvPg==",
-	   "de": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YmFkZ2UgdmFsdWU9Im5ld01lc3NhZ2UiLz4="
-	},
-	"wns_type": "Badge", // 'Tile' | 'Toast' | 'Badge' | 'Raw'
-	"wns_tag": "myTag", // Optional. Used in the replacement policy of the Tile. An alphanumeric string of no more than 16 characters.
 
 	 // Safari related
 	"safari_title": "Title", // Title of the notification
