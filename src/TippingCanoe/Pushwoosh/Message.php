@@ -10,7 +10,7 @@
 		public $data;
 
 		/** @var string */
-		public $title;
+		public $secondaryContent;
 
 		/** @var string|string[] */
 		public $content;
@@ -182,7 +182,8 @@
 					|| in_array($attribute, [
 						'wnsType',
 						'wnsToastType',
-						'imageUri'
+						'imageUri',
+						'secondaryContent'
 					])
 				)
 					continue;
@@ -253,14 +254,12 @@
 								// Build out the text elements in order, attending to the id in sequence.
 								$textId = 1;
 
-								if($this->title) {
-									$title = $binding->addChild('text', $this->title);
-									$title->addAttribute('id', $textId);
-									++$textId;
-								}
+								$title = $binding->addChild('text', $this->content);
+								$title->addAttribute('id', $textId);
+								++$textId;
 
-								if($this->wnsToastType > 1 || !$this->title) {
-									$text = $binding->addChild('text', $this->content);
+								if($this->wnsToastType > self::TOAST_TYPE_1 && $this->secondaryContent) {
+									$text = $binding->addChild('text', $this->secondaryContent);
 									$text->addAttribute('id', $textId);
 									++$textId;
 								}
