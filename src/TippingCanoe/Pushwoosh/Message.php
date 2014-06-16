@@ -214,7 +214,7 @@
 						// Generate WNS notification data if none has been assigned.
 						if(!$value) {
 
-							// ToDo: Break this out into more types later.
+							// ToDo: Break this out into a more sophisticated pipeline.
 							if($this->wnsType == self::WNS_TOAST) {
 
 								// Toast Schema
@@ -227,18 +227,22 @@
 									$toast->addAttribute('launch', json_encode($this->data));
 
 								$visual = $toast->addChild('visual');
-
 								$binding = $visual->addChild('binding');
 
+								// For now, when notifications have a title, the type is "02", otherwise "01"
+								$toastType = $this->title ? "02" : "01";
+
+								// Make sure to pick the right template.
+								// http://msdn.microsoft.com/en-ca/library/windows/apps/hh761494.aspx
 								if($this->imageUri) {
-									$binding->addAttribute('template', 'ToastImageAndText02');
+									$binding->addAttribute('template', sprintf('ToastImageAndText%s', $toastType));
 									$image = $binding->addChild('image');
 									$image->addAttribute('id', '1');
 									$image->addAttribute('src', $this->imageUri);
 									$image->addAttribute('alt', '');
 								}
 								else {
-									$binding->addAttribute('template', 'ToastText02');
+									$binding->addAttribute('template', sprintf('ToastText%s', $toastType));
 								}
 
 								$textId = 1;
