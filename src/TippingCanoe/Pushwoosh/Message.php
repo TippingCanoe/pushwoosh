@@ -99,6 +99,13 @@
 		/** @var int */
 		public $wnsType = self::WNS_TOAST;
 
+		const TOAST_TYPE_1 = 1;
+		const TOAST_TYPE_2 = 2;
+		const TOAST_TYPE_3 = 3;
+
+		/** @var int */
+		public $wnsToastType = self::TOAST_TYPE_1;
+
 		/** @var string */
 		public $wnsContent;
 
@@ -174,6 +181,7 @@
 					// Some fields are meta fields offered as a convenience when targeting multiple platforms.
 					|| in_array($attribute, [
 						'wnsType',
+						'wnsToastType',
 						'imageUri'
 					])
 				)
@@ -229,31 +237,33 @@
 								$visual = $toast->addChild('visual');
 								$binding = $visual->addChild('binding');
 
-								// For now, when notifications have a title, the type is "02", otherwise "01"
-								$toastType = $this->title ? "02" : "01";
-
 								// Make sure to pick the right template.
 								// http://msdn.microsoft.com/en-ca/library/windows/apps/hh761494.aspx
 								if($this->imageUri) {
-									$binding->addAttribute('template', sprintf('ToastImageAndText%s', $toastType));
+									$binding->addAttribute('template', sprintf('ToastImageAndText0%s', $this->wnsToastType));
 									$image = $binding->addChild('image');
 									$image->addAttribute('id', '1');
 									$image->addAttribute('src', $this->imageUri);
 									$image->addAttribute('alt', '');
 								}
 								else {
-									$binding->addAttribute('template', sprintf('ToastText%s', $toastType));
+									$binding->addAttribute('template', sprintf('ToastText0%s', $this->wnsToastType));
 								}
 
+								// Build out the text elements in order, attending to the id in sequence.
 								$textId = 1;
+
 								if($this->title) {
 									$title = $binding->addChild('text', $this->title);
 									$title->addAttribute('id', $textId);
 									++$textId;
 								}
 
-								$text = $binding->addChild('text', $this->content);
-								$text->addAttribute('id', $textId);
+								if($this->wnsToastType > 1 || !$this->title) {
+									$text = $binding->addChild('text', $this->content);
+									$text->addAttribute('id', $textId);
+									++$textId;
+								}
 
 								$value = base64_encode($toast->asXML());
 
