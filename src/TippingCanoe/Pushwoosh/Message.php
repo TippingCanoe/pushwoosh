@@ -9,11 +9,11 @@
 		/** @var string|array|object */
 		public $data;
 
-		/** @var string */
-		public $secondaryContent;
-
 		/** @var string|string[] */
 		public $content;
+
+		/** @var string */
+		public $secondaryContent;
 
 		/** @var string */
 		public $imageUri;
@@ -178,7 +178,8 @@
 				// Never send empty arrays.
 				if(
 					(is_array($value) && empty($value))
-					// Some fields are meta fields offered as a convenience when targeting multiple platforms.
+					// Some fields are meta fields offered as a convenience
+					// by this library when targeting multiple platforms.
 					|| in_array($attribute, [
 						'wnsType',
 						'wnsToastType',
@@ -231,7 +232,6 @@
 								// http://msdn.microsoft.com/en-us/library/windows/apps/br230846.aspx
 								$toast = new SimpleXMLElement('<?xml version="1.0" ?><toast></toast>');
 
-								// Toast Element
 								if($this->data)
 									$toast->addAttribute('launch', json_encode($this->data));
 
@@ -254,13 +254,13 @@
 								// Build out the text elements in order, attending to the id in sequence.
 								$textId = 1;
 
-								$title = $binding->addChild('text', $this->content);
-								$title->addAttribute('id', $textId);
+								$primary = $binding->addChild('text', $this->content);
+								$primary->addAttribute('id', $textId);
 								++$textId;
 
 								if($this->wnsToastType > self::TOAST_TYPE_1 && $this->secondaryContent) {
-									$text = $binding->addChild('text', $this->secondaryContent);
-									$text->addAttribute('id', $textId);
+									$secondary = $binding->addChild('text', $this->secondaryContent);
+									$secondary->addAttribute('id', $textId);
 									++$textId;
 								}
 
