@@ -12,7 +12,7 @@
 		/** @var string|string[] */
 		public $content;
 
-		/** @var string */
+		/** @var string[] */
 		public $secondaryContent;
 
 		/** @var string */
@@ -259,9 +259,13 @@
 								++$textId;
 
 								if($this->wnsToastType > self::TOAST_TYPE_1 && $this->secondaryContent) {
-									$secondary = $binding->addChild('text', $this->secondaryContent);
-									$secondary->addAttribute('id', $textId);
-									++$textId;
+
+									foreach($this->secondaryContent as $secondaryContent) {
+										$secondary = $binding->addChild('text', $secondaryContent);
+										$secondary->addAttribute('id', $textId);
+										++$textId;
+									}
+
 								}
 
 								$value = base64_encode($toast->asXML());
