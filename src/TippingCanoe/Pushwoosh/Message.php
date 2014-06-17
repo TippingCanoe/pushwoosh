@@ -38,10 +38,10 @@
 		//
 
 		/** @var \TippingCanoe\Pushwoosh\Device[] */
-		protected $devices = [];
+		protected $devices = array();
 
 		/** @var array */
-		protected $conditions = [];
+		protected $conditions = array();
 
 		/** @var int[] */
 		protected $platforms;
@@ -171,7 +171,7 @@
 		 */
 		public function toArray() {
 
-			$data = [];
+			$data = array();
 
 			foreach($this as $attribute => $value) {
 
@@ -180,12 +180,12 @@
 					(is_array($value) && empty($value))
 					// Some fields are meta fields offered as a convenience
 					// by this library when targeting multiple platforms.
-					|| in_array($attribute, [
+					|| in_array($attribute, array(
 						'wnsType',
 						'wnsToastType',
 						'imageUri',
 						'secondaryContent'
-					])
+					))
 				)
 					continue;
 

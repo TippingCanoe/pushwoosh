@@ -41,7 +41,7 @@
 		 */
 		public function push(Message $message) {
 
-			$data = [];
+			$data = array();
 
 			$this->addMessage($message, $data);
 			$this->addApplicationCode($data);
@@ -74,7 +74,7 @@
 		 */
 		protected function addMessage(Message $message, array &$data) {
 			if(!array_key_exists('notifications', $data))
-				$data['notifications'] = [];
+				$data['notifications'] = array();
 			$data['notifications'][] = $message->toArray();
 		}
 
@@ -105,9 +105,9 @@
 		protected function callApi($method, $data) {
 
 			$url = 'https://cp.pushwoosh.com/json/1.3/' . $method;
-			$request = json_encode([
+			$request = json_encode(array(
 				'request' => $data
-			]);
+			));
 
 			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -120,10 +120,10 @@
 			$response = curl_exec($ch);
 
 			// Store some logging information that can be picked up by anything interested.
-			$this->lastLog = [
+			$this->lastLog = array(
 				'data' => $data,
 				'info' => curl_getinfo($ch)
-			];
+			);
 
 			curl_close($ch);
 
