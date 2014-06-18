@@ -43,12 +43,24 @@
 		/** @var array */
 		protected $conditions = array();
 
+
+	1 - iOS;
+	2 - BB;
+	3 - Android;
+	5 - Windows Phone;
+	7 - OS X;
+	8 - Windows 8;
+	9 - Amazon;
+	10 - Safari
+
 		const IOS = 1;
 		const BLACKBERRY = 2;
 		const ANDROID = 3;
-		const WINDOWS_PHONE = 4;
-		const OSX = 5;
-		const WINDOWS = 5;
+		const NOKIA_ASHA = 4;
+		const WINDOWS_PHONE = 5;
+		//const ??? = 6;
+		const OSX = 7;
+		const WINDOWS_8 = 8;
 		const AMAZON = 9;
 		const SAFARI = 10;
 
