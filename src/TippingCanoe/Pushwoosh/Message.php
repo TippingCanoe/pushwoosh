@@ -121,7 +121,7 @@
 		public $wnsContent;
 
 		/** @var string */
-		// public $wnsTag;
+		public $wnsTag;
 
 		//
 		//
@@ -199,7 +199,6 @@
 					// Some fields are meta fields offered as a convenience
 					// by this library when targeting multiple platforms.
 					|| in_array($attribute, array(
-						'wnsType',
 						'wnsToastType',
 						'imageUri',
 						'secondaryContent'
@@ -232,6 +231,15 @@
 							return sprintf('%s %s %s', $condition->name, $condition->operator, $condition->operand);
 
 						}, $value);
+
+					break;
+
+					case 'wnsType':
+
+						if($value == self::WNS_TOAST)
+							$value = 'Toast';
+						elseif($value == self::WNS_TILE)
+							$value = 'Tile';
 
 					break;
 
