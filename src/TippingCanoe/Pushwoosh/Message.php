@@ -53,7 +53,7 @@
 		const SAFARI = 10;
 
 		/** @var int[] */
-		protected $platforms;
+		public $platforms;
 
 		//
 		// iOS Attributes
