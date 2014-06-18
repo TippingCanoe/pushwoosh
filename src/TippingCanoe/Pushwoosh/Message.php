@@ -43,6 +43,15 @@
 		/** @var array */
 		protected $conditions = array();
 
+		const IOS = 1;
+		const BLACKBERRY = 2;
+		const ANDROID = 3;
+		const WINDOWS_PHONE = 4;
+		const OSX = 5;
+		const WINDOWS = 5;
+		const AMAZON = 9;
+		const SAFARI = 10;
+
 		/** @var int[] */
 		protected $platforms;
 
