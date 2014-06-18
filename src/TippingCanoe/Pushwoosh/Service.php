@@ -51,7 +51,7 @@
 		}
 
 		/**
-		 * Adds devices to a message and sends them, mostly a convenience method.
+		 * Adds devices to a message and sends them, mostly a convenience method, but also ensures the message is reusable after.
 		 *
 		 * @param \TippingCanoe\Pushwoosh\Message $message
 		 * @param \TippingCanoe\Pushwoosh\Device|\TippingCanoe\Pushwoosh\Device[] $devices
@@ -59,7 +59,9 @@
 		 */
 		public function pushToDevices(Message $message, $devices) {
 			$message->addDevices($devices);
-			return $this->push($message);
+			$result = $this->push($message);
+			$message->clearDevices();
+			return $result;
 		}
 
 		//

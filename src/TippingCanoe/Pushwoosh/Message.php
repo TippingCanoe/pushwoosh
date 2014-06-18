@@ -171,6 +171,13 @@
 
 		}
 
+		/**
+		 * Wipes out the internal devices array.
+		 */
+		public function clearDevices() {
+			$this->devices = array();
+		}
+
 		//
 		//
 		//
