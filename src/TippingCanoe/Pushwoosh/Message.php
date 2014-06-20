@@ -280,14 +280,16 @@
 								// Build out the text elements in order, attending to the id in sequence.
 								$textId = 1;
 
-								$primary = $binding->addChild('text', $this->content);
+								$primary = $binding->addChild('text');
+								$primary[0] = $this->content;
 								$primary->addAttribute('id', $textId);
 								++$textId;
 
 								if($this->wnsToastType > self::TOAST_TYPE_1 && $this->secondaryContent) {
 
 									foreach($this->secondaryContent as $secondaryContent) {
-										$secondary = $binding->addChild('text', $secondaryContent);
+										$secondary = $binding->addChild('text');
+										$secondary[0] = $secondaryContent;
 										$secondary->addAttribute('id', $textId);
 										++$textId;
 									}
