@@ -34,19 +34,61 @@
 		}
 
 		/**
-		 * Sends a message.
+		 * Pushes the data supplied.
 		 *
-		 * @param \TippingCanoe\Pushwoosh\Message $message
+		 * @param \TippingCanoe\Pushwoosh\Message|\TippingCanoe\Pushwoosh\Message[] $data
 		 * @return mixed
 		 */
-		public function push(Message $message) {
+		public function push($data) {
+			if($data instanceof Message) {
+				return $this->pushSingle($data);
+			}
+			elseif(is_array($data)) {
+				return $this->pushArray($data);
+			}
+		}
+
+		/**
+		 * Pushes a single message.
+		 *
+		 * @param Message $message
+		 * @return mixed
+		 */
+		public function pushSingle(Message $message) {
 
 			$data = array();
 
 			$this->addMessage($message, $data);
 			$this->addApplicationCode($data);
 			$this->addAccessToken($data);
+
 			return $this->callApi('createMessage', $data);
+
+		}
+
+		/**
+		 * Pushes an array containing compatible data.
+		 *
+		 * @param array $array
+		 * @return mixed
+		 */
+		public function pushArray(array $array) {
+
+			$data = array();
+
+			foreach($array as $dataItem) {
+				if($dataItem instanceof Message) {
+					$this->addMessage($dataItem, $data);
+				}
+			}
+
+			if(count($data)) {
+				$this->addApplicationCode($data);
+				$this->addAccessToken($data);
+				return $this->callApi('createMessage', $data);
+			}
+
+			return null;
 
 		}
 
