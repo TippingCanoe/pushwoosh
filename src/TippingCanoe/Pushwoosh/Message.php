@@ -33,6 +33,8 @@
 		/** @var int */
 		public $minimizeLink;
 
+		/** @var int */
+		public $sendRate = 100;
 		//
 		//
 		//
