@@ -171,7 +171,7 @@
 
 			curl_close($ch);
 
-			return json_decode($response);
+			return $response;
 
 		}
 
