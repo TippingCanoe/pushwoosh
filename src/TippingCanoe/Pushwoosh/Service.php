@@ -164,6 +164,12 @@
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 
 			$response = curl_exec($ch);
+			
+			$retry = 0;
+			while(curl_errno($ch) == 28 && $retry < 3){
+			    $response = curl_exec($ch);
+			    $retry ++;
+			}
 
 			// Store some logging information that can be picked up by anything interested.
 			$this->lastLog = array(
