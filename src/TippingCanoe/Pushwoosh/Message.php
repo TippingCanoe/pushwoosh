@@ -209,6 +209,11 @@
 					continue;
 
 				switch($attribute) {
+					case 'sendRate':
+						// Not supported for device specific sends.
+						if(is_array($this->devices) && count($this->devices))
+							$value = null;
+					break;
 
 					case 'sendDate':
 						if($value instanceof Carbon)
@@ -315,7 +320,9 @@
 
 				}
 
-				$data[$this->snake($attribute)] = $value;
+				// By default, do not serialize nulls.
+				if(!is_null($attribute) && !is_null($value))
+					$data[$this->snake($attribute)] = $value;
 
 			}
 
