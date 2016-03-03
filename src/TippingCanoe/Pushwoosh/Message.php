@@ -34,7 +34,7 @@
 		public $minimizeLink;
 
 		/** @var int */
-		public $sendRate = 100;
+		public $sendRate;
 		//
 		//
 		//
