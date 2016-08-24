@@ -35,6 +35,9 @@
 
 		/** @var int */
 		public $sendRate = 100;
+		
+		/** @var string */
+		public $campaign;
 		//
 		//
 		//
