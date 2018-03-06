@@ -154,7 +154,7 @@
 			));
 
 			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60 * 3); 
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); 
 			curl_setopt($ch, CURLOPT_TIMEOUT, 60 * 5);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
